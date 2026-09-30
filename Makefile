@@ -1,12 +1,12 @@
 # 빌드와 테스트를 한 단어로 돌리기 위한 Makefile.
 # 컨테이너 안에서 실행한다 (docker compose exec lab bash).
 #
-#   make run     작은 예제 하나로 세 정렬 실행 (C, Python — 같은 출력)
-#   make test    유닛 테스트 (C, Python) + 두 구현의 출력이 같은지 확인
-#   make bench   비교 표 (퀵 · 병합 · 보고)
-#   make charts  측정을 CSV로 남기고 report/ 아래에 그래프(SVG)를 다시 그린다
-#   make debug   디버그 심볼을 넣어 빌드 (VS Code의 F5가 쓴다)
-#   make clean   빌드 산출물 정리
+#   make run      정렬 비교 실험 전체 (Java 코드의 main과 같은 흐름, 10초 남짓)
+#   make results  실험 출력을 report/results.txt에 남긴다
+#   make demo     작은 배열 하나로 세 정렬 실행 (C, Python — 같은 출력)
+#   make test     유닛 테스트 (C, Python) + 두 구현의 출력이 같은지 확인
+#   make debug    디버그 심볼을 넣어 빌드 (VS Code의 F5가 쓴다)
+#   make clean    빌드 산출물 정리
 #
 # 실행 파일은 `*.out`으로 만든다. .gitignore가 그것만 걸러낸다.
 
@@ -16,20 +16,22 @@ CFLAGS ?= -std=c17 -Wall -Wextra -O2
 # `-I`는 아래 패턴 규칙이 대상 파일의 폴더로 붙인다. 여기서 고정하지 않는다.
 DEBUGFLAGS ?= -std=c17 -Wall -Wextra -g -O0
 
-# 정렬 구현이 파일마다 하나씩이라 여기에 나열한다. 새 정렬을 넣으면 이 줄도 본다.
-SORT_SRC = src/sort.c src/quickSort.c src/mergeSort.c src/bogoSort.c src/bench.c
-SORT_HDR = src/sort.h src/sortctx.h src/bench.h
+# main.c와 테스트가 함께 쓰는 소스.
+SORT_SRC = src/sort.c src/data.c
+SORT_HDR = src/sort.h src/data.h
 
-.PHONY: all run run-c run-py test test-c test-py test-same bench charts debug clean
+.PHONY: all run results demo test test-c test-py test-same debug clean
 
 all: test
 
-run: run-c run-py
-
-run-c: src/main.out
+run: src/main.out
 	@./src/main.out
 
-run-py:
+results: src/main.out
+	./src/main.out > report/results.txt
+
+demo: src/main.out
+	@./src/main.out --demo
 	@python3 src/main.py
 
 test: test-c test-py test-same
@@ -40,19 +42,11 @@ test-c: tests/test_sort.out
 test-py:
 	@python3 -m unittest discover -s tests -v
 
-# C와 Python이 같은 알고리즘인지 본다. 비교·이동·섞기 횟수까지 같아야 통과한다.
+# C와 Python이 같은 알고리즘인지 본다. 비교·섞기 횟수까지 같아야 통과한다.
 test-same: src/main.out
-	@./src/main.out > src/demo-c.out
+	@./src/main.out --demo > src/demo-c.out
 	@python3 src/main.py > src/demo-py.out
 	@diff src/demo-c.out src/demo-py.out && echo "ok    C와 Python의 출력이 같다"
-
-bench: src/main.out
-	@./src/main.out --bench
-
-# 그래프는 표준 모듈만 쓰는 tools/plot.py가 SVG로 직접 찍는다 (외부 라이브러리 없음).
-charts: src/main.out
-	./src/main.out --csv > report/results.csv
-	python3 tools/plot.py report/results.csv report
 
 debug: src/main.debug.out
 

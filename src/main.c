@@ -1,242 +1,179 @@
-/* 정렬 비교 — 퀵 / 병합 / 보고.
+/* 정렬 비교 실험 — 병합 · 퀵 · 보고 정렬.
  *
- *   make run                 작은 배열 하나로 세 정렬을 돌린다 (Python과 같은 출력)
- *   make bench               사람이 읽는 비교 표
- *   ./src/main.out --csv     같은 측정을 CSV로 (tools/plot.py가 쓴다)
+ *   make run                  아래 main의 실험 전체 (Java 코드의 main과 같은 흐름)
+ *   ./src/main.out --demo     작은 배열 하나 (Python의 main.py와 같은 출력)
  *
- * 부르는 쪽은 정렬 이름을 하나도 적지 않는다. 구현 표(SORT_ALGORITHMS)를
- * 훑을 뿐이다. 무엇을 잴지도 아래 SPECS 한 곳에만 적는다.
+ * 배열 크기 × 입력 종류마다 같은 입력을 복사해 세 정렬에 넘기고, 걸린 시간과
+ * 임시 배열 메모리, 비교 횟수, 재귀 깊이를 찍는다. 보고 정렬은 n <= 10에서만 돌린다.
  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
-#include "bench.h"
+#include "data.h"
 #include "sort.h"
 
-#define SEED 20260930u
+#define SEED 2026193117u
+#define BOGO_MAX_N 10
 
-/* --- 무엇을 잴 것인가 -------------------------------------------------- */
-
-typedef struct Spec {
-    const char *scope; /* kinds · growth · bogo · dup */
-    InputKind kind;
-    size_t n;
-    int reps;   /* 같은 입력을 몇 번 돌려 시간을 평균 낼지 */
-    int trials; /* 입력(과 보고 정렬의 씨앗)을 바꿔 가며 몇 번 잴지 */
-} Spec;
-
-static const Spec SPECS[] = {
-    {"kinds", INPUT_RANDOM, 4000, 3, 1},
-    {"kinds", INPUT_SORTED, 4000, 3, 1},
-    {"kinds", INPUT_REVERSED, 4000, 3, 1},
-    {"kinds", INPUT_FEW_UNIQUE, 4000, 3, 1},
-    {"growth", INPUT_RANDOM, 1000, 3, 1},
-    {"growth", INPUT_RANDOM, 2000, 3, 1},
-    {"growth", INPUT_RANDOM, 4000, 3, 1},
-    {"growth", INPUT_RANDOM, 8000, 3, 1},
-    {"growth", INPUT_RANDOM, 16000, 3, 1},
-    {"growth", INPUT_RANDOM, 32000, 3, 1},
-    {"growth", INPUT_RANDOM, 64000, 3, 1},
-    {"growth", INPUT_SORTED, 1000, 1, 1},
-    {"growth", INPUT_SORTED, 2000, 1, 1},
-    {"growth", INPUT_SORTED, 4000, 1, 1},
-    {"growth", INPUT_SORTED, 8000, 1, 1},
-    {"bogo", INPUT_RANDOM, 2, 1, 10},
-    {"bogo", INPUT_RANDOM, 3, 1, 10},
-    {"bogo", INPUT_RANDOM, 4, 1, 10},
-    {"bogo", INPUT_RANDOM, 5, 1, 10},
-    {"bogo", INPUT_RANDOM, 6, 1, 10},
-    {"bogo", INPUT_RANDOM, 7, 1, 10},
-    {"bogo", INPUT_RANDOM, 8, 1, 10},
-    {"bogo", INPUT_RANDOM, 9, 1, 10},
-    {"bogo", INPUT_RANDOM, 10, 1, 10},
-    {"dup", INPUT_FEW_UNIQUE, 10, 1, 10},
-};
-
-static const size_t SPEC_COUNT = sizeof(SPECS) / sizeof(SPECS[0]);
-
-/* 한 정렬 × 한 Spec의 결과. trials번 잰 것을 평균 낸다. */
-typedef struct Row {
-    const SortAlgorithm *algo;
-    int skipped;       /* n이 algo->maxN을 넘어 돌리지 않았다 */
-    double millis;
-    double compares;
-    double moves;
-    double shuffles;
-    size_t shufflesMin;
-    size_t shufflesMax;
-    size_t extraBytes;
-    size_t maxDepth;
-    int sortedTrials;
-    int stableTrials;
-} Row;
-
-static Row measure(const Spec *spec, const SortAlgorithm *algo) {
-    Row row;
-    memset(&row, 0, sizeof(row));
-    row.algo = algo;
-    row.shufflesMin = (size_t)-1;
-    if (algo->maxN != 0 && spec->n > algo->maxN) {
-        row.skipped = 1;
-        return row;
-    }
-    Record *input = (Record *)malloc(spec->n * sizeof(Record));
-    if (input == NULL) {
-        row.skipped = 1;
-        return row;
-    }
-    for (int t = 0; t < spec->trials; t++) {
-        /* 입력과 섞기 씨앗을 함께 바꾼다. 세 정렬은 회차마다 같은 입력을 받는다. */
-        makeInput(input, spec->n, spec->kind, SEED + (unsigned)t);
-        bogoSortSeed = SEED + (uint32_t)t;
-        BenchResult r = benchRun(algo, input, spec->n, spec->reps);
-        row.millis += r.millis;
-        row.compares += (double)r.stats.compares;
-        row.moves += (double)r.stats.moves;
-        row.shuffles += (double)r.stats.shuffles;
-        if (r.stats.shuffles < row.shufflesMin) {
-            row.shufflesMin = r.stats.shuffles;
-        }
-        if (r.stats.shuffles > row.shufflesMax) {
-            row.shufflesMax = r.stats.shuffles;
-        }
-        row.extraBytes = r.stats.extraBytes;
-        if (r.stats.maxDepth > row.maxDepth) {
-            row.maxDepth = r.stats.maxDepth;
-        }
-        row.sortedTrials += r.sorted;
-        row.stableTrials += r.stable;
-    }
-    row.millis /= spec->trials;
-    row.compares /= spec->trials;
-    row.moves /= spec->trials;
-    row.shuffles /= spec->trials;
-    bogoSortSeed = SEED;
-    free(input);
-    return row;
+static double elapsedMs(clock_t start, clock_t end) {
+    return (double)(end - start) * 1000.0 / CLOCKS_PER_SEC;
 }
 
-/* 결과 한 줄을 받아 가는 곳. 표로 찍을지 CSV로 찍을지만 다르다. */
-typedef void (*RowSink)(const Spec *spec, const Row *row);
+static double toMB(size_t bytes) {
+    return (double)bytes / (1024.0 * 1024.0);
+}
 
-static void measureAll(RowSink sink, void (*onSpec)(const Spec *spec)) {
-    for (size_t s = 0; s < SPEC_COUNT; s++) {
-        if (onSpec != NULL) {
-            onSpec(&SPECS[s]);
+static int *copyOf(const int base[], int n) {
+    int *arr = (int *)malloc((size_t)(n > 0 ? n : 1) * sizeof(int));
+    memcpy(arr, base, (size_t)n * sizeof(int));
+    return arr;
+}
+
+static int *generate(const char *type, int n, Random *rand) {
+    if (strcmp(type, "Random") == 0) return generateRandom(n, rand);
+    if (strcmp(type, "Sorted") == 0) return generateSorted(n);
+    if (strcmp(type, "ReverseSorted") == 0) return generateReverseSorted(n);
+    if (strcmp(type, "NearlySorted") == 0) return generateNearlySorted(n, rand);
+    if (strcmp(type, "FewUnique") == 0) return generateFewUnique(n, rand);
+    return generateAllEqual(n);
+}
+
+/* 결과가 정렬됐는지 본다. sort.c의 isSorted와 달리 비교 횟수를 세지 않는다. */
+static int verifySorted(const int arr[], int n) {
+    for (int i = 1; i < n; i++) {
+        if (arr[i - 1] > arr[i]) return 0;
+    }
+    return 1;
+}
+
+/* 한 줄 출력. 정렬이 틀렸으면 바로 보이게 표시한다. */
+static void printResult(const char *name, double ms, const int arr[], int n) {
+    printf("%-12s %10.3f ms, %.2f MB used, %12lld compares, depth %3d%s",
+           name, ms, toMB(sortStats.peakBytes), sortStats.compares, sortStats.maxDepth,
+           verifySorted(arr, n) ? "" : "  [NOT SORTED]");
+}
+
+static void experiment(void) {
+    static const int sizes[] = {10, 100, 1000, 10000, 50000, 100000};
+    static const char *dataTypes[] = {"Random", "Sorted", "ReverseSorted",
+                                      "NearlySorted", "FewUnique", "AllEqual"};
+    const int sizeCount = (int)(sizeof(sizes) / sizeof(sizes[0]));
+    const int typeCount = (int)(sizeof(dataTypes) / sizeof(dataTypes[0]));
+    Random rand;
+    randomInit(&rand, SEED);
+
+    for (int s = 0; s < sizeCount; s++) {
+        int n = sizes[s];
+        printf("=== Array size: %d ===\n", n);
+        for (int t = 0; t < typeCount; t++) {
+            int *base = generate(dataTypes[t], n, &rand);
+            int *a = copyOf(base, n);
+            int *b = copyOf(base, n);
+            int *c = copyOf(base, n);
+            clock_t start, end;
+
+            printf("Input: %s\n", dataTypes[t]);
+
+            sortStatsReset();
+            start = clock();
+            mergeSort(a, 0, n - 1);
+            end = clock();
+            printResult("Merge Sort:", elapsedMs(start, end), a, n);
+            printf("\n");
+
+            sortStatsReset();
+            start = clock();
+            quickSort(b, 0, n - 1, &rand);
+            end = clock();
+            printResult("Quick Sort:", elapsedMs(start, end), b, n);
+            printf("\n");
+
+            if (n <= BOGO_MAX_N) {
+                sortStatsReset();
+                start = clock();
+                bogoSort(c, n, &rand);
+                end = clock();
+                printResult("Bogo Sort:", elapsedMs(start, end), c, n);
+                printf(", %lld shuffles\n", sortStats.shuffles);
+            } else {
+                printf("Bogo Sort:   (skipped, too slow)\n");
+            }
+            printf("\n");
+            free(base);
+            free(a);
+            free(b);
+            free(c);
         }
-        for (size_t k = 0; k < SORT_ALGORITHM_COUNT; k++) {
-            Row row = measure(&SPECS[s], &SORT_ALGORITHMS[k]);
-            sink(&SPECS[s], &row);
-        }
+        printf("--------------------------------------------\n");
     }
 }
 
-/* --- 사람이 읽는 표 ---------------------------------------------------- */
+/* 보고 정렬만 n = 1..10에서 10번씩 돌려 섞기 횟수를 n!과 견준다. */
+static void bogoExperiment(void) {
+    const int trials = 10;
+    Random rand;
+    randomInit(&rand, SEED);
+    double factorial = 1.0;
 
-#define ROW_HEADER "알고리즘       시간(ms)          비교          이동      섞기   메모리 재귀깊이  정렬 안정\n"
-#define ROW_RULE   "--------------------------------------------------------------------------------------------\n"
-
-static void tableRow(const Spec *spec, const Row *row) {
-    if (row->skipped) {
-        printf("%-11s  (n > %zu이라 돌리지 않음)\n", row->algo->name, row->algo->maxN);
-        return;
-    }
-    printf("%-11s %11.3f %13.0f %13.0f %9.0f %7zu B %8zu %3d/%d %2d/%d\n", row->algo->name,
-           row->millis, row->compares, row->moves, row->shuffles, row->extraBytes,
-           row->maxDepth, row->sortedTrials, spec->trials, row->stableTrials, spec->trials);
-}
-
-static void tableSpecHeader(const Spec *spec) {
-    static const char *lastScope = NULL;
-
-    if (lastScope == NULL || strcmp(lastScope, spec->scope) != 0) {
-        if (strcmp(spec->scope, "kinds") == 0) {
-            printf("\n== 입력 모양별 (n = %zu, %d회 평균) ==\n", spec->n, spec->reps);
-        } else if (strcmp(spec->scope, "growth") == 0) {
-            printf("\n== n을 키우며 ==\n");
-        } else if (strcmp(spec->scope, "bogo") == 0) {
-            printf("\n== 작은 n에서 셋 모두 (무작위, 입력 %d벌 평균) ==\n", spec->trials);
-        } else {
-            printf("\n== 중복이 있는 작은 입력 (안정성, 입력 %d벌) ==\n", spec->trials);
+    printf("=== Bogo Sort: Random input, %d trials each ===\n", trials);
+    printf(" n          n!   avg shuffles    min shuffles    max shuffles   avg compares   avg ms\n");
+    for (int n = 1; n <= BOGO_MAX_N; n++) {
+        factorial *= n;
+        double sumShuffles = 0, sumCompares = 0, sumMs = 0;
+        long long minShuffles = -1, maxShuffles = 0;
+        for (int t = 0; t < trials; t++) {
+            int *arr = generateRandom(n, &rand);
+            sortStatsReset();
+            clock_t start = clock();
+            bogoSort(arr, n, &rand);
+            clock_t end = clock();
+            sumMs += elapsedMs(start, end);
+            sumShuffles += (double)sortStats.shuffles;
+            sumCompares += (double)sortStats.compares;
+            if (minShuffles < 0 || sortStats.shuffles < minShuffles) minShuffles = sortStats.shuffles;
+            if (sortStats.shuffles > maxShuffles) maxShuffles = sortStats.shuffles;
+            free(arr);
         }
-        lastScope = spec->scope;
+        printf("%2d %11.0f %14.1f %15lld %15lld %14.1f %8.3f\n", n, factorial,
+               sumShuffles / trials, minShuffles, maxShuffles, sumCompares / trials,
+               sumMs / trials);
     }
-    printf("\n[%s, n = %zu]\n%s%s", inputKindName(spec->kind), spec->n, ROW_HEADER, ROW_RULE);
 }
 
-static void reportTable(void) {
-    printf("=== 정렬 비교: 퀵 · 병합 · 보고 ===\n");
-    printf("원소는 (key, tag) %zu바이트. key로 정렬하고 tag로 안정성을 본다.\n\n",
-           sizeof(Record));
-    printf("알고리즘    시간복잡도  메모리  안정성    최대 n\n%s", ROW_RULE);
-    for (size_t k = 0; k < SORT_ALGORITHM_COUNT; k++) {
-        const SortAlgorithm *a = &SORT_ALGORITHMS[k];
-        printf("%-11s %-11s %-7s %-9s ", a->name, a->timeComplexity, a->spaceComplexity,
-               a->stable ? "stable" : "unstable");
-        if (a->maxN == 0) {
-            printf("-\n");
-        } else {
-            printf("%zu\n", a->maxN);
-        }
-    }
-    measureAll(tableRow, tableSpecHeader);
-    printf("\n정렬·안정 열은 '그렇게 나온 회차 / 전체 회차'다.\n");
-}
-
-/* --- 기계가 읽는 CSV --------------------------------------------------- */
-
-static void csvRow(const Spec *spec, const Row *row) {
-    if (row->skipped) {
-        return;
-    }
-    printf("%s,%s,%zu,%s,%d,%.4f,%.1f,%.1f,%zu,%zu,%.1f,%zu,%zu,%d,%d\n", spec->scope,
-           inputKindKey(spec->kind), spec->n, row->algo->name, spec->trials, row->millis,
-           row->compares, row->moves, row->extraBytes, row->maxDepth, row->shuffles,
-           row->shufflesMin, row->shufflesMax, row->sortedTrials, row->stableTrials);
-}
-
-static void reportCsv(void) {
-    printf("scope,input,n,algo,trials,millis,compares,moves,extraBytes,maxDepth,"
-           "shuffles,shufflesMin,shufflesMax,sortedTrials,stableTrials\n");
-    measureAll(csvRow, NULL);
-}
-
-/* --- 작은 예제: Python(main.py)과 글자 하나까지 같은 출력을 낸다 ------------ */
-
+/* 작은 배열 하나. Python(main.py)과 글자 하나까지 같은 출력을 낸다. */
 static void demo(void) {
     static const int INPUT[] = {6, 2, 5, 1, 7, 3, 4};
-    const size_t n = sizeof(INPUT) / sizeof(INPUT[0]);
+    const int n = (int)(sizeof(INPUT) / sizeof(INPUT[0]));
+    const char *names[] = {"mergeSort", "quickSort", "bogoSort"};
 
-    printf("input: ");
-    for (size_t i = 0; i < n; i++) {
-        printf(" %d", INPUT[i]);
-    }
+    printf("input:");
+    for (int i = 0; i < n; i++) printf(" %d", INPUT[i]);
     printf("\n");
-    for (size_t k = 0; k < SORT_ALGORITHM_COUNT; k++) {
-        const SortAlgorithm *algo = &SORT_ALGORITHMS[k];
+    for (int k = 0; k < 3; k++) {
         int a[sizeof(INPUT) / sizeof(INPUT[0])];
-        SortStats stats;
+        Random rand;
         memcpy(a, INPUT, sizeof(INPUT));
-        sortStatsReset(&stats);
-        algo->sort(a, n, sizeof(int), sortCompareInt, &stats);
+        randomInit(&rand, SEED);
+        sortStatsReset();
+        if (k == 0) mergeSort(a, 0, n - 1);
+        else if (k == 1) quickSort(a, 0, n - 1, &rand);
+        else bogoSort(a, n, &rand);
 
-        printf("%-9s", algo->name);
-        for (size_t i = 0; i < n; i++) {
-            printf(" %d", a[i]);
-        }
-        printf("  compares=%zu moves=%zu depth=%zu shuffles=%zu\n", stats.compares,
-               stats.moves, stats.maxDepth, stats.shuffles);
+        printf("%-9s", names[k]);
+        for (int i = 0; i < n; i++) printf(" %d", a[i]);
+        printf("  compares=%lld depth=%d shuffles=%lld\n", sortStats.compares,
+               sortStats.maxDepth, sortStats.shuffles);
     }
 }
 
 int main(int argc, char **argv) {
-    if (argc > 1 && strcmp(argv[1], "--csv") == 0) {
-        reportCsv();
-    } else if (argc > 1 && strcmp(argv[1], "--bench") == 0) {
-        reportTable();
-    } else {
+    if (argc > 1 && strcmp(argv[1], "--demo") == 0) {
         demo();
+        return 0;
     }
+    experiment();
+    bogoExperiment();
     return 0;
 }
