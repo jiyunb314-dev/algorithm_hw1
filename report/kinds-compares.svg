@@ -1,0 +1,38 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='640' height='380' viewBox='0 0 640 380' font-family='Noto Sans KR, Apple SD Gothic Neo, Malgun Gothic, sans-serif' font-size='12'>
+<rect width='640' height='380' fill='white'/>
+<text x='320.0' y='24' text-anchor='middle' font-size='15' font-weight='bold'>입력 모양별 비교 횟수 (n = 4,000, 로그 축)</text>
+<line x1='80' y1='324.0' x2='490' y2='324.0' stroke='#e5e5e5'/>
+<text x='74' y='328.0' text-anchor='end'>10k</text>
+<line x1='80' y1='230.7' x2='490' y2='230.7' stroke='#e5e5e5'/>
+<text x='74' y='234.7' text-anchor='end'>100k</text>
+<line x1='80' y1='137.3' x2='490' y2='137.3' stroke='#e5e5e5'/>
+<text x='74' y='141.3' text-anchor='end'>1M</text>
+<line x1='80' y1='44.0' x2='490' y2='44.0' stroke='#e5e5e5'/>
+<text x='74' y='48.0' text-anchor='end'>10M</text>
+<text x='131.2' y='342' text-anchor='middle'>무작위</text>
+<rect x='95.4' y='251.3' width='33.9' height='72.7' fill='#2a6fdb'/>
+<text x='112.3' y='247.3' text-anchor='middle' font-size='10'>60.18k</text>
+<rect x='131.2' y='265.0' width='33.9' height='59.0' fill='#1f9d55'/>
+<text x='148.2' y='261.0' text-anchor='middle' font-size='10'>42.84k</text>
+<text x='233.8' y='342' text-anchor='middle'>정렬됨</text>
+<rect x='197.9' y='53.1' width='33.9' height='270.9' fill='#2a6fdb'/>
+<text x='214.8' y='49.1' text-anchor='middle' font-size='10'>7.998M</text>
+<rect x='233.8' y='289.0' width='33.9' height='35.0' fill='#1f9d55'/>
+<text x='250.7' y='285.0' text-anchor='middle' font-size='10'>23.73k</text>
+<text x='336.2' y='342' text-anchor='middle'>역순</text>
+<rect x='300.4' y='53.1' width='33.9' height='270.9' fill='#2a6fdb'/>
+<text x='317.3' y='49.1' text-anchor='middle' font-size='10'>7.998M</text>
+<rect x='336.2' y='288.2' width='33.9' height='35.8' fill='#1f9d55'/>
+<text x='353.2' y='284.2' text-anchor='middle' font-size='10'>24.18k</text>
+<text x='438.8' y='342' text-anchor='middle'>중복많음</text>
+<rect x='402.9' y='136.8' width='33.9' height='187.2' fill='#2a6fdb'/>
+<text x='419.8' y='132.8' text-anchor='middle' font-size='10'>1.013M</text>
+<rect x='438.8' y='266.5' width='33.9' height='57.5' fill='#1f9d55'/>
+<text x='455.7' y='262.5' text-anchor='middle' font-size='10'>41.32k</text>
+<rect x='80' y='44' width='410' height='280' fill='none' stroke='#333'/>
+<text transform='translate(18 184.0) rotate(-90)' text-anchor='middle'>비교 횟수</text>
+<rect x='502' y='48' width='24' height='12' fill='#2a6fdb'/>
+<text x='532' y='58'>quickSort</text>
+<rect x='502' y='68' width='24' height='12' fill='#1f9d55'/>
+<text x='532' y='78'>mergeSort</text>
+</svg>
