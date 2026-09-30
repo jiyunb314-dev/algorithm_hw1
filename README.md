@@ -1,7 +1,9 @@
-# 고급알고리즘 과제 1 — 정렬 비교 (퀵 · 병합 · 보고)
+# 고급알고리즘 과제 1 — 정렬 비교 (병합 · 퀵 · 보고)
 
-2026-2 **고급알고리즘**(SIT2001-01) 과제 1. 수업에서 배운 **퀵 정렬 · 병합 정렬**과
-배우지 않은 **보고 정렬(bogosort)**을 같은 인터페이스로 묶고, 같은 잣대로 비교한다.
+2026-2 **고급알고리즘**(SIT2001-01) 과제 1 · 배지윤 (2026193117)
+
+수업에서 배운 **병합 정렬 · 퀵 정렬**과 배우지 않은 **보고 정렬**(bogosort)을 C로 구현해
+배열 크기 × 입력 종류별로 비교한다. 코드 흐름은 참고한 Java 코드(`Algorithms.java`)를 따른다.
 
 - **보고서: [report/REPORT.md](report/REPORT.md)**
 - 실습 환경: [lec-algorithm/algorithm-env](https://github.com/lec-algorithm/algorithm-env) template에서 시작
@@ -32,34 +34,33 @@ VS Code를 쓴다면 Dev Containers 확장의 **Reopen in Container**를 골라�
 
 | 명령 | 하는 일 |
 | --- | --- |
-| `make run` | 작은 배열 하나로 세 정렬 실행 (C · Python, 같은 출력) |
+| `make run` | 정렬 비교 실험 전체 (배열 크기 6가지 × 입력 6가지, 10초 남짓) |
+| `make results` | 실험 출력을 `report/results.txt`에 남긴다 |
+| `make demo` | 작은 배열 하나로 세 정렬 실행 (C · Python, 같은 출력) |
 | `make test` | 유닛 테스트 (C · Python) + 두 구현의 출력 대조 |
-| `make bench` | 비교 표 (입력 모양별 · n을 키우며 · 작은 n에서 보고 정렬) |
-| `make charts` | 측정을 `report/results.csv`로 남기고 `report/*.svg` 그래프를 다시 그린다 |
-| `make run-c` · `make run-py` | 한쪽만 실행 |
 | `make debug` | 디버그 심볼을 넣어 빌드 |
 | `make clean` | 빌드 산출물 정리 |
 
 ```console
 $ make run
-input:  6 2 5 1 7 3 4
-quickSort 1 2 3 4 5 6 7  compares=11 moves=21 depth=4 shuffles=0
-mergeSort 1 2 3 4 5 6 7  compares=14 moves=40 depth=4 shuffles=0
-bogoSort  1 2 3 4 5 6 7  compares=15515 moves=121005 depth=1 shuffles=9142
-(Python도 같은 네 줄을 찍는다)
+=== Array size: 100000 ===
+Input: Random
+Merge Sort:      13.285 ms, 0.38 MB used,      1536246 compares, depth  17
+Quick Sort:       8.491 ms, 0.00 MB used,      1941216 compares, depth  10
+Bogo Sort:   (skipped, too slow)
+...
 ```
+
+보고 정렬은 평균 `n!`번을 섞어야 하므로 n = 10에서만 돌리고, 더 큰 배열은 건너뛴다.
 
 ```console
 $ make test
 ...
-37 checks, 0 failures
+34 checks, 0 failures
 ...
 OK
 ok    C와 Python의 출력이 같다
 ```
-
-`make bench`는 보고 정렬 n = 10 측정 때문에 몇 초 걸린다. 보고 정렬은 n이 10보다
-크면 돌리지 않는다(평균 `n!`번을 섞어야 한다).
 
 ## VS Code에서 실행·디버그
 
@@ -78,7 +79,7 @@ Codespaces나 Dev Containers로 열었다면 편집기에서 바로 됩니다.
 
 ### 파일 하나만 실행·디버그하기
 
-**C 디버그 (현재 파일)**은 열려 있는 `.c` 파일을 그대로 디버깅합니다. 폴더가
+**C 디버그 (현재 파일)** 구성은 열려 있는 `.c` 파일을 그대로 디버깅합니다. 폴더가
 늘어나도 구성을 새로 만들 필요가 없습니다.
 
 같은 폴더의 `.c`를 함께 링크하므로, 구현이 옆 파일에 있어도 됩니다. 대신
@@ -116,18 +117,16 @@ Code Runner도 기본 설정 그대로면 같은 문제가 나고, Python은 이
 
 ```plaintext
 algorithm_hw1/
-├── Makefile                          # run · test · bench · charts · debug · clean
+├── Makefile                          # run · results · demo · test · debug · clean
 ├── src/
-│   ├── sort.h · sort.c · sortctx.h   # 공통 인터페이스(SortAlgorithm)와 도구
-│   ├── quickSort.c · mergeSort.c · bogoSort.c
-│   ├── bench.h · bench.c             # 입력 생성 · 측정 · 안정성 판정
-│   ├── main.c                        # 예제 / --bench 표 / --csv
+│   ├── sort.h · sort.c               # merge · mergeSort · partitionRandom · quickSort · bogoSort
+│   ├── data.h · data.c               # generateRandom 등 입력 생성 6가지
+│   ├── main.c                        # 실험 (Java main과 같은 흐름) / --demo
 │   └── sort.py · main.py             # 같은 세 정렬의 Python 구현
 ├── tests/
 │   ├── test_sort.c                   # C 유닛 테스트 (표준 C만 사용)
 │   └── test_sort.py                  # Python 유닛 테스트 (unittest)
-├── tools/plot.py                     # CSV → SVG 그래프 (표준 모듈만 사용)
-├── report/                           # 보고서 · 그래프 · results.csv
+├── report/                           # 보고서 · 실험 출력(results.txt)
 ├── .devcontainer/ · compose.yml · Dockerfile   # 실습 컨테이너
 └── .vscode/                          # 빌드·디버그 설정 (F5, Cmd+Shift+B)
 ```

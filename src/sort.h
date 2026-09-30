@@ -1,8 +1,10 @@
-/* 정렬 비교 과제 — 퀵 · 병합 · 보고 정렬을 하나의 공통 인터페이스로 묶는다.
+/* 정렬 비교 과제 — 병합 · 퀵 · 보고 정렬.
  *
- * C에는 interface가 없으므로 함수 포인터를 담은 구조체(SortAlgorithm)를 쓴다.
- * 비교 규약은 표준 라이브러리의 qsort와 같다. 그래서 정렬은 원소의 타입을
- * 모르고, 측정 코드는 (key, tag) 원소로 안정성까지 잴 수 있다.
+ * 함수 구성은 참고한 Java 코드(Algorithms.java)를 그대로 따른다.
+ *   merge / mergeSort(arr, left, right)          구간은 양끝 포함
+ *   partitionRandom / quickSort(arr, low, high)  무작위 피벗, 작은 쪽만 재귀
+ * Java의 java.util.Random 대신 Random 구조체를 넘긴다. 씨앗이 같으면 C와
+ * Python(sort.py)이 같은 난수를 내므로 두 구현의 결과를 대조할 수 있다.
  */
 #ifndef SORT_H
 #define SORT_H
@@ -10,43 +12,45 @@
 #include <stddef.h>
 #include <stdint.h>
 
-/* a<b면 음수, a==b면 0, a>b면 양수. */
-typedef int (*SortCompare)(const void *a, const void *b);
+/* --- 난수 (xorshift32) ------------------------------------------------ */
 
-/* 한 번 정렬하는 동안 모인 측정값. 시계와 무관하게 재현되는 값만 담는다. */
+typedef struct Random {
+    uint32_t state;
+} Random;
+
+void randomInit(Random *rand, uint32_t seed);
+uint32_t randomNext(Random *rand);
+int randomNextInt(Random *rand, int bound); /* 0 이상 bound 미만 */
+
+/* --- 측정값 ------------------------------------------------------------ */
+
+/* 정렬 한 번 동안 모인 값. 정렬하기 전에 sortStatsReset()으로 비운다. */
 typedef struct SortStats {
-    size_t compares;   /* 비교 함수를 부른 횟수 */
-    size_t moves;      /* 원소를 복사한 횟수 (교환 한 번은 3) */
-    size_t extraBytes; /* 입력 배열 밖에 잡은 작업 공간 (바이트) */
-    size_t maxDepth;   /* 재귀 깊이의 최댓값. 반복문만 쓰면 1 */
-    size_t shuffles;   /* 보고 정렬이 배열을 섞은 횟수. 다른 정렬은 0 */
+    long long compares; /* 원소끼리 비교한 횟수 */
+    long long shuffles; /* 보고 정렬이 섞은 횟수 */
+    size_t curBytes;    /* 지금 잡고 있는 임시 배열의 바이트 */
+    size_t peakBytes;   /* 임시 배열이 가장 컸을 때의 바이트 (Java의 "MB used"에 해당) */
+    int depth;          /* 지금 재귀 깊이 */
+    int maxDepth;       /* 재귀 깊이의 최댓값 (스택 사용량의 대리 지표) */
 } SortStats;
 
-typedef struct SortAlgorithm {
-    const char *name;
-    const char *timeComplexity;  /* 평균 시간복잡도 */
-    const char *spaceComplexity; /* 추가 메모리 */
-    int stable;                  /* 안정 정렬이라고 주장하는 값. 테스트가 실측과 맞춰 본다 */
-    size_t maxN;                 /* 현실적으로 돌려 볼 수 있는 최대 n. 0이면 제한 없음 */
-    void (*sort)(void *base, size_t n, size_t size, SortCompare cmp, SortStats *stats);
-} SortAlgorithm;
+extern SortStats sortStats;
+void sortStatsReset(void);
 
-void quickSort(void *base, size_t n, size_t size, SortCompare cmp, SortStats *stats);
-void mergeSort(void *base, size_t n, size_t size, SortCompare cmp, SortStats *stats);
-void bogoSort(void *base, size_t n, size_t size, SortCompare cmp, SortStats *stats);
+/* --- 병합 정렬 --------------------------------------------------------- */
 
-/* 구현 표. 부르는 쪽(main.c · bench.c · 테스트)은 이 표만 훑는다. */
-extern const SortAlgorithm SORT_ALGORITHMS[];
-extern const size_t SORT_ALGORITHM_COUNT;
+void merge(int arr[], int left, int mid, int right);
+void mergeSort(int arr[], int left, int right);
 
-/* 보고 정렬이 섞을 때 쓰는 난수 씨앗. 호출마다 이 값에서 다시 시작하므로
- * 같은 입력 · 같은 씨앗이면 섞는 횟수까지 똑같이 재현된다 (Python 구현과도 같다). */
-extern uint32_t bogoSortSeed;
+/* --- 퀵 정렬 ----------------------------------------------------------- */
 
-/* xorshift32. Python 쪽(sort.py)과 비트 단위로 같은 수열을 낸다. */
-uint32_t sortRandomNext(uint32_t *state);
+int partitionRandom(int arr[], int low, int high, Random *rand);
+void quickSort(int arr[], int low, int high, Random *rand);
 
-void sortStatsReset(SortStats *stats);
-int sortCompareInt(const void *a, const void *b); /* int 배열용 기본 비교 함수 */
+/* --- 보고 정렬 (수업에서 다루지 않은 정렬) ----------------------------- */
+
+int isSorted(const int arr[], int n);
+void shuffle(int arr[], int n, Random *rand);
+void bogoSort(int arr[], int n, Random *rand);
 
 #endif /* SORT_H */

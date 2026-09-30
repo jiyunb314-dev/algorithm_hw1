@@ -1,0 +1,204 @@
+=== Array size: 10 ===
+Input: Random
+Merge Sort:       0.002 ms, 0.00 MB used,           22 compares, depth   4
+Quick Sort:       0.001 ms, 0.00 MB used,           20 compares, depth   2
+Bogo Sort:       87.535 ms, 0.00 MB used,      3979237 compares, depth   0, 2315638 shuffles
+
+Input: Sorted
+Merge Sort:       0.002 ms, 0.00 MB used,           19 compares, depth   4
+Quick Sort:       0.001 ms, 0.00 MB used,           29 compares, depth   2
+Bogo Sort:        0.000 ms, 0.00 MB used,            9 compares, depth   0, 0 shuffles
+
+Input: ReverseSorted
+Merge Sort:       0.001 ms, 0.00 MB used,           15 compares, depth   4
+Quick Sort:       0.000 ms, 0.00 MB used,           23 compares, depth   2
+Bogo Sort:       39.078 ms, 0.00 MB used,      1775704 compares, depth   0, 1033033 shuffles
+
+Input: NearlySorted
+Merge Sort:       0.002 ms, 0.00 MB used,           19 compares, depth   4
+Quick Sort:       0.001 ms, 0.00 MB used,           34 compares, depth   2
+Bogo Sort:        0.001 ms, 0.00 MB used,            9 compares, depth   0, 0 shuffles
+
+Input: FewUnique
+Merge Sort:       0.001 ms, 0.00 MB used,           25 compares, depth   4
+Quick Sort:       0.000 ms, 0.00 MB used,           25 compares, depth   2
+Bogo Sort:        5.880 ms, 0.00 MB used,       277424 compares, depth   0, 138524 shuffles
+
+Input: AllEqual
+Merge Sort:       0.002 ms, 0.00 MB used,           19 compares, depth   4
+Quick Sort:       0.001 ms, 0.00 MB used,           45 compares, depth   1
+Bogo Sort:        0.000 ms, 0.00 MB used,            9 compares, depth   0, 0 shuffles
+
+--------------------------------------------
+=== Array size: 100 ===
+Input: Random
+Merge Sort:       0.009 ms, 0.00 MB used,          534 compares, depth   7
+Quick Sort:       0.005 ms, 0.00 MB used,          638 compares, depth   4
+Bogo Sort:   (skipped, too slow)
+
+Input: Sorted
+Merge Sort:       0.005 ms, 0.00 MB used,          356 compares, depth   7
+Quick Sort:       0.003 ms, 0.00 MB used,          759 compares, depth   4
+Bogo Sort:   (skipped, too slow)
+
+Input: ReverseSorted
+Merge Sort:       0.006 ms, 0.00 MB used,          316 compares, depth   7
+Quick Sort:       0.005 ms, 0.00 MB used,          694 compares, depth   3
+Bogo Sort:   (skipped, too slow)
+
+Input: NearlySorted
+Merge Sort:       0.009 ms, 0.00 MB used,          465 compares, depth   7
+Quick Sort:       0.028 ms, 0.00 MB used,          575 compares, depth   4
+Bogo Sort:   (skipped, too slow)
+
+Input: FewUnique
+Merge Sort:       0.010 ms, 0.00 MB used,          528 compares, depth   7
+Quick Sort:       0.005 ms, 0.00 MB used,         1158 compares, depth   2
+Bogo Sort:   (skipped, too slow)
+
+Input: AllEqual
+Merge Sort:       0.006 ms, 0.00 MB used,          356 compares, depth   7
+Quick Sort:       0.006 ms, 0.00 MB used,         4950 compares, depth   1
+Bogo Sort:   (skipped, too slow)
+
+--------------------------------------------
+=== Array size: 1000 ===
+Input: Random
+Merge Sort:       0.129 ms, 0.00 MB used,         8688 compares, depth  10
+Quick Sort:       0.065 ms, 0.00 MB used,        12001 compares, depth   6
+Bogo Sort:   (skipped, too slow)
+
+Input: Sorted
+Merge Sort:       0.048 ms, 0.00 MB used,         5044 compares, depth  10
+Quick Sort:       0.030 ms, 0.00 MB used,        10363 compares, depth   6
+Bogo Sort:   (skipped, too slow)
+
+Input: ReverseSorted
+Merge Sort:       0.047 ms, 0.00 MB used,         4932 compares, depth  10
+Quick Sort:       0.033 ms, 0.00 MB used,        11326 compares, depth   6
+Bogo Sort:   (skipped, too slow)
+
+Input: NearlySorted
+Merge Sort:       0.055 ms, 0.00 MB used,         7403 compares, depth  10
+Quick Sort:       0.037 ms, 0.00 MB used,        11377 compares, depth   6
+Bogo Sort:   (skipped, too slow)
+
+Input: FewUnique
+Merge Sort:       0.068 ms, 0.00 MB used,         8160 compares, depth  10
+Quick Sort:       0.097 ms, 0.00 MB used,       102331 compares, depth   3
+Bogo Sort:   (skipped, too slow)
+
+Input: AllEqual
+Merge Sort:       0.043 ms, 0.00 MB used,         5044 compares, depth  10
+Quick Sort:       0.312 ms, 0.00 MB used,       499500 compares, depth   1
+Bogo Sort:   (skipped, too slow)
+
+--------------------------------------------
+=== Array size: 10000 ===
+Input: Random
+Merge Sort:       1.280 ms, 0.04 MB used,       120538 compares, depth  14
+Quick Sort:       0.870 ms, 0.00 MB used,       164532 compares, depth   8
+Bogo Sort:   (skipped, too slow)
+
+Input: Sorted
+Merge Sort:       0.456 ms, 0.04 MB used,        69008 compares, depth  14
+Quick Sort:       0.417 ms, 0.00 MB used,       161853 compares, depth   8
+Bogo Sort:   (skipped, too slow)
+
+Input: ReverseSorted
+Merge Sort:       0.519 ms, 0.04 MB used,        64608 compares, depth  14
+Quick Sort:       0.474 ms, 0.00 MB used,       175635 compares, depth   9
+Bogo Sort:   (skipped, too slow)
+
+Input: NearlySorted
+Merge Sort:       0.695 ms, 0.04 MB used,       112003 compares, depth  14
+Quick Sort:       0.439 ms, 0.00 MB used,       161511 compares, depth   8
+Bogo Sort:   (skipped, too slow)
+
+Input: FewUnique
+Merge Sort:       0.808 ms, 0.04 MB used,       112308 compares, depth  14
+Quick Sort:       4.973 ms, 0.00 MB used,     10033920 compares, depth   3
+Bogo Sort:   (skipped, too slow)
+
+Input: AllEqual
+Merge Sort:       0.481 ms, 0.04 MB used,        69008 compares, depth  14
+Quick Sort:      25.600 ms, 0.00 MB used,     49995000 compares, depth   1
+Bogo Sort:   (skipped, too slow)
+
+--------------------------------------------
+=== Array size: 50000 ===
+Input: Random
+Merge Sort:       6.581 ms, 0.19 MB used,       718150 compares, depth  16
+Quick Sort:       4.647 ms, 0.00 MB used,       934573 compares, depth  10
+Bogo Sort:   (skipped, too slow)
+
+Input: Sorted
+Merge Sort:       2.602 ms, 0.19 MB used,       401952 compares, depth  16
+Quick Sort:       1.755 ms, 0.00 MB used,       906642 compares, depth  11
+Bogo Sort:   (skipped, too slow)
+
+Input: ReverseSorted
+Merge Sort:       2.442 ms, 0.19 MB used,       382512 compares, depth  16
+Quick Sort:       1.957 ms, 0.00 MB used,       938520 compares, depth  10
+Bogo Sort:   (skipped, too slow)
+
+Input: NearlySorted
+Merge Sort:       3.436 ms, 0.19 MB used,       674768 compares, depth  16
+Quick Sort:       2.416 ms, 0.00 MB used,       949874 compares, depth  10
+Bogo Sort:   (skipped, too slow)
+
+Input: FewUnique
+Merge Sort:       3.805 ms, 0.19 MB used,       665909 compares, depth  16
+Quick Sort:     133.590 ms, 0.00 MB used,    250149487 compares, depth   2
+Bogo Sort:   (skipped, too slow)
+
+Input: AllEqual
+Merge Sort:       2.598 ms, 0.19 MB used,       401952 compares, depth  16
+Quick Sort:     710.200 ms, 0.00 MB used,   1249975000 compares, depth   1
+Bogo Sort:   (skipped, too slow)
+
+--------------------------------------------
+=== Array size: 100000 ===
+Input: Random
+Merge Sort:      13.285 ms, 0.38 MB used,      1536246 compares, depth  17
+Quick Sort:       8.491 ms, 0.00 MB used,      1941216 compares, depth  10
+Bogo Sort:   (skipped, too slow)
+
+Input: Sorted
+Merge Sort:       4.885 ms, 0.38 MB used,       853904 compares, depth  17
+Quick Sort:       3.640 ms, 0.00 MB used,      2020889 compares, depth  11
+Bogo Sort:   (skipped, too slow)
+
+Input: ReverseSorted
+Merge Sort:       5.136 ms, 0.38 MB used,       815024 compares, depth  17
+Quick Sort:       4.036 ms, 0.00 MB used,      2054379 compares, depth  11
+Bogo Sort:   (skipped, too slow)
+
+Input: NearlySorted
+Merge Sort:       6.127 ms, 0.38 MB used,      1448027 compares, depth  17
+Quick Sort:       4.758 ms, 0.00 MB used,      1994632 compares, depth  10
+Bogo Sort:   (skipped, too slow)
+
+Input: FewUnique
+Merge Sort:       7.386 ms, 0.38 MB used,      1420795 compares, depth  17
+Quick Sort:     538.180 ms, 0.00 MB used,   1000158618 compares, depth   3
+Bogo Sort:   (skipped, too slow)
+
+Input: AllEqual
+Merge Sort:       5.061 ms, 0.38 MB used,       853904 compares, depth  17
+Quick Sort:    2882.269 ms, 0.00 MB used,   4999950000 compares, depth   1
+Bogo Sort:   (skipped, too slow)
+
+--------------------------------------------
+=== Bogo Sort: Random input, 10 trials each ===
+ n          n!   avg shuffles    min shuffles    max shuffles   avg compares   avg ms
+ 1           1            0.0               0               0            0.0    0.000
+ 2           2            0.8               0               4            1.8    0.000
+ 3           6            7.4               0              21           12.6    0.000
+ 4          24           31.3               2              54           53.4    0.001
+ 5         120          192.6              52             332          335.1    0.005
+ 6         720          467.2              47             977          803.0    0.011
+ 7        5040         6002.8             391           19759        10294.2    0.161
+ 8       40320        39990.8            5839          115668        68655.3    1.265
+ 9      362880       357875.1           72220          629080       614872.7   12.419
+10     3628800      4084983.8          232310        12515749      7019299.7  151.816
