@@ -3,6 +3,7 @@
 #
 #   make run      정렬 비교 실험 전체 (배열 크기 × 입력 종류, 10초 남짓)
 #   make results  실험 출력을 report/results.txt에 남긴다
+#   make charts   results.txt로 보고서 그래프(report/fig*.svg)를 다시 그린다
 #   make demo     작은 배열 하나로 세 정렬 실행 (C, Python — 같은 출력)
 #   make test     유닛 테스트 (C, Python) + 두 구현의 출력이 같은지 확인
 #   make debug    디버그 심볼을 넣어 빌드 (VS Code의 F5가 쓴다)
@@ -20,7 +21,7 @@ DEBUGFLAGS ?= -std=c17 -Wall -Wextra -g -O0
 SORT_SRC = src/sort.c src/data.c
 SORT_HDR = src/sort.h src/data.h
 
-.PHONY: all run results demo test test-c test-py test-same debug clean
+.PHONY: all run results charts demo test test-c test-py test-same debug clean
 
 all: test
 
@@ -29,6 +30,10 @@ run: src/main.out
 
 results: src/main.out
 	./src/main.out > report/results.txt
+
+# 그래프는 표준 모듈만 쓰는 tools/plot.py가 SVG로 직접 그린다 (외부 라이브러리 없음).
+charts:
+	python3 tools/plot.py report/results.txt report
 
 demo: src/main.out
 	@./src/main.out --demo
