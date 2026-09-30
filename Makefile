@@ -1,8 +1,10 @@
 # 빌드와 테스트를 한 단어로 돌리기 위한 Makefile.
 # 컨테이너 안에서 실행한다 (docker compose exec lab bash).
 #
-#   make run     예제 실행 (C, Python)
-#   make test    유닛 테스트 (C, Python)
+#   make run     작은 예제 하나로 세 정렬 실행 (C, Python — 같은 출력)
+#   make test    유닛 테스트 (C, Python) + 두 구현의 출력이 같은지 확인
+#   make bench   비교 표 (퀵 · 병합 · 보고)
+#   make charts  측정을 CSV로 남기고 report/ 아래에 그래프(SVG)를 다시 그린다
 #   make debug   디버그 심볼을 넣어 빌드 (VS Code의 F5가 쓴다)
 #   make clean   빌드 산출물 정리
 #
@@ -14,7 +16,11 @@ CFLAGS ?= -std=c17 -Wall -Wextra -O2
 # `-I`는 아래 패턴 규칙이 대상 파일의 폴더로 붙인다. 여기서 고정하지 않는다.
 DEBUGFLAGS ?= -std=c17 -Wall -Wextra -g -O0
 
-.PHONY: all run run-c run-py test test-c test-py debug clean
+# 정렬 구현이 파일마다 하나씩이라 여기에 나열한다. 새 정렬을 넣으면 이 줄도 본다.
+SORT_SRC = src/sort.c src/quickSort.c src/mergeSort.c src/bogoSort.c src/bench.c
+SORT_HDR = src/sort.h src/sortctx.h src/bench.h
+
+.PHONY: all run run-c run-py test test-c test-py test-same bench charts debug clean
 
 all: test
 
@@ -26,7 +32,7 @@ run-c: src/main.out
 run-py:
 	@python3 src/main.py
 
-test: test-c test-py
+test: test-c test-py test-same
 
 test-c: tests/test_sort.out
 	@./tests/test_sort.out
@@ -34,7 +40,24 @@ test-c: tests/test_sort.out
 test-py:
 	@python3 -m unittest discover -s tests -v
 
+# C와 Python이 같은 알고리즘인지 본다. 비교·이동·섞기 횟수까지 같아야 통과한다.
+test-same: src/main.out
+	@./src/main.out > src/demo-c.out
+	@python3 src/main.py > src/demo-py.out
+	@diff src/demo-c.out src/demo-py.out && echo "ok    C와 Python의 출력이 같다"
+
+bench: src/main.out
+	@./src/main.out --bench
+
+# 그래프는 표준 모듈만 쓰는 tools/plot.py가 SVG로 직접 찍는다 (외부 라이브러리 없음).
+charts: src/main.out
+	./src/main.out --csv > report/results.csv
+	python3 tools/plot.py report/results.csv report
+
 debug: src/main.debug.out
+
+src/main.out: src/main.c $(SORT_SRC) $(SORT_HDR)
+	$(CC) $(CFLAGS) -Isrc -o $@ src/main.c $(SORT_SRC)
 
 # 파일 하나를 그 자리에서 빌드한다. 같은 폴더의 .c를 함께 링크하므로 헤더에
 # 선언만 있고 구현이 옆 파일에 있어도 된다. 대신 **한 폴더에 main은 하나만** 둔다.
@@ -47,8 +70,8 @@ debug: src/main.debug.out
 %.debug.out: %.c
 	$(CC) $(DEBUGFLAGS) -I$(@D) -o $@ $(wildcard $(@D)/*.c)
 
-tests/test_sort.out: tests/test_sort.c src/sort.c src/sort.h
-	$(CC) $(CFLAGS) -Isrc -o $@ tests/test_sort.c src/sort.c
+tests/test_sort.out: tests/test_sort.c $(SORT_SRC) $(SORT_HDR)
+	$(CC) $(CFLAGS) -Isrc -o $@ tests/test_sort.c $(SORT_SRC)
 
 clean:
 	rm -f src/*.out tests/*.out

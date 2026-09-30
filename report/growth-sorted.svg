@@ -1,0 +1,44 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='640' height='380' viewBox='0 0 640 380' font-family='Noto Sans KR, Apple SD Gothic Neo, Malgun Gothic, sans-serif' font-size='12'>
+<rect width='640' height='380' fill='white'/>
+<text x='320.0' y='24' text-anchor='middle' font-size='15' font-weight='bold'>정렬된 입력: n에 따른 비교 횟수 (로그-로그)</text>
+<line x1='80' y1='324.0' x2='490' y2='324.0' stroke='#e5e5e5'/>
+<text x='74' y='328.0' text-anchor='end'>1k</text>
+<line x1='80' y1='268.0' x2='490' y2='268.0' stroke='#e5e5e5'/>
+<text x='74' y='272.0' text-anchor='end'>10k</text>
+<line x1='80' y1='212.0' x2='490' y2='212.0' stroke='#e5e5e5'/>
+<text x='74' y='216.0' text-anchor='end'>100k</text>
+<line x1='80' y1='156.0' x2='490' y2='156.0' stroke='#e5e5e5'/>
+<text x='74' y='160.0' text-anchor='end'>1M</text>
+<line x1='80' y1='100.0' x2='490' y2='100.0' stroke='#e5e5e5'/>
+<text x='74' y='104.0' text-anchor='end'>10M</text>
+<line x1='80' y1='44.0' x2='490' y2='44.0' stroke='#e5e5e5'/>
+<text x='74' y='48.0' text-anchor='end'>100M</text>
+<line x1='80.0' y1='324' x2='80.0' y2='328' stroke='#333'/>
+<text x='80.0' y='342' text-anchor='middle'>1k</text>
+<line x1='203.4' y1='324' x2='203.4' y2='328' stroke='#333'/>
+<text x='203.4' y='342' text-anchor='middle'>2k</text>
+<line x1='326.8' y1='324' x2='326.8' y2='328' stroke='#333'/>
+<text x='326.8' y='342' text-anchor='middle'>4k</text>
+<line x1='450.3' y1='324' x2='450.3' y2='328' stroke='#333'/>
+<text x='450.3' y='342' text-anchor='middle'>8k</text>
+<rect x='80' y='44' width='410' height='280' fill='none' stroke='#333'/>
+<text x='285.0' y='368' text-anchor='middle'>n</text>
+<text transform='translate(18 184.0) rotate(-90)' text-anchor='middle'>비교 횟수</text>
+<polyline points='80.0,172.9 203.4,139.2 326.8,105.4 450.3,71.7' fill='none' stroke='#2a6fdb' stroke-width='2'/>
+<circle cx='80.0' cy='172.9' r='3.5' fill='#2a6fdb'/>
+<circle cx='203.4' cy='139.2' r='3.5' fill='#2a6fdb'/>
+<circle cx='326.8' cy='105.4' r='3.5' fill='#2a6fdb'/>
+<circle cx='450.3' cy='71.7' r='3.5' fill='#2a6fdb'/>
+<line x1='502' y1='54' x2='526' y2='54' stroke='#2a6fdb' stroke-width='2'/>
+<text x='532' y='58'>quickSort</text>
+<polyline points='80.0,285.2 203.4,266.0 326.8,247.0 450.3,228.2' fill='none' stroke='#1f9d55' stroke-width='2'/>
+<circle cx='80.0' cy='285.2' r='3.5' fill='#1f9d55'/>
+<circle cx='203.4' cy='266.0' r='3.5' fill='#1f9d55'/>
+<circle cx='326.8' cy='247.0' r='3.5' fill='#1f9d55'/>
+<circle cx='450.3' cy='228.2' r='3.5' fill='#1f9d55'/>
+<line x1='502' y1='74' x2='526' y2='74' stroke='#1f9d55' stroke-width='2'/>
+<text x='532' y='78'>mergeSort</text>
+<polyline points='80.0,172.9 203.4,139.1 326.8,105.4 450.3,71.7' fill='none' stroke='#888888' stroke-width='2' stroke-dasharray='6 4'/>
+<line x1='502' y1='94' x2='526' y2='94' stroke='#888888' stroke-width='2' stroke-dasharray='6 4'/>
+<text x='532' y='98'>n²/2</text>
+</svg>

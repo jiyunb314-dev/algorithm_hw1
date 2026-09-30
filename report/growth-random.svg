@@ -1,0 +1,54 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='640' height='380' viewBox='0 0 640 380' font-family='Noto Sans KR, Apple SD Gothic Neo, Malgun Gothic, sans-serif' font-size='12'>
+<rect width='640' height='380' fill='white'/>
+<text x='320.0' y='24' text-anchor='middle' font-size='15' font-weight='bold'>무작위 입력: n에 따른 비교 횟수 (로그-로그)</text>
+<line x1='80' y1='324.0' x2='490' y2='324.0' stroke='#e5e5e5'/>
+<text x='74' y='328.0' text-anchor='end'>1k</text>
+<line x1='80' y1='254.0' x2='490' y2='254.0' stroke='#e5e5e5'/>
+<text x='74' y='258.0' text-anchor='end'>10k</text>
+<line x1='80' y1='184.0' x2='490' y2='184.0' stroke='#e5e5e5'/>
+<text x='74' y='188.0' text-anchor='end'>100k</text>
+<line x1='80' y1='114.0' x2='490' y2='114.0' stroke='#e5e5e5'/>
+<text x='74' y='118.0' text-anchor='end'>1M</text>
+<line x1='80' y1='44.0' x2='490' y2='44.0' stroke='#e5e5e5'/>
+<text x='74' y='48.0' text-anchor='end'>10M</text>
+<line x1='80.0' y1='324' x2='80.0' y2='328' stroke='#333'/>
+<text x='80.0' y='342' text-anchor='middle'>1k</text>
+<line x1='141.7' y1='324' x2='141.7' y2='328' stroke='#333'/>
+<text x='141.7' y='342' text-anchor='middle'>2k</text>
+<line x1='203.4' y1='324' x2='203.4' y2='328' stroke='#333'/>
+<text x='203.4' y='342' text-anchor='middle'>4k</text>
+<line x1='265.1' y1='324' x2='265.1' y2='328' stroke='#333'/>
+<text x='265.1' y='342' text-anchor='middle'>8k</text>
+<line x1='326.8' y1='324' x2='326.8' y2='328' stroke='#333'/>
+<text x='326.8' y='342' text-anchor='middle'>16k</text>
+<line x1='388.6' y1='324' x2='388.6' y2='328' stroke='#333'/>
+<text x='388.6' y='342' text-anchor='middle'>32k</text>
+<line x1='450.3' y1='324' x2='450.3' y2='328' stroke='#333'/>
+<text x='450.3' y='342' text-anchor='middle'>64k</text>
+<rect x='80' y='44' width='410' height='280' fill='none' stroke='#333'/>
+<text x='285.0' y='368' text-anchor='middle'>n</text>
+<text transform='translate(18 184.0) rotate(-90)' text-anchor='middle'>비교 횟수</text>
+<polyline points='80.0,253.1 141.7,226.1 203.4,199.4 265.1,179.1 326.8,155.7 388.6,129.8 450.3,107.4' fill='none' stroke='#2a6fdb' stroke-width='2'/>
+<circle cx='80.0' cy='253.1' r='3.5' fill='#2a6fdb'/>
+<circle cx='141.7' cy='226.1' r='3.5' fill='#2a6fdb'/>
+<circle cx='203.4' cy='199.4' r='3.5' fill='#2a6fdb'/>
+<circle cx='265.1' cy='179.1' r='3.5' fill='#2a6fdb'/>
+<circle cx='326.8' cy='155.7' r='3.5' fill='#2a6fdb'/>
+<circle cx='388.6' cy='129.8' r='3.5' fill='#2a6fdb'/>
+<circle cx='450.3' cy='107.4' r='3.5' fill='#2a6fdb'/>
+<line x1='502' y1='54' x2='526' y2='54' stroke='#2a6fdb' stroke-width='2'/>
+<text x='532' y='58'>quickSort</text>
+<polyline points='80.0,258.2 141.7,233.8 203.4,209.8 265.1,186.0 326.8,162.4 388.6,139.1 450.3,115.8' fill='none' stroke='#1f9d55' stroke-width='2'/>
+<circle cx='80.0' cy='258.2' r='3.5' fill='#1f9d55'/>
+<circle cx='141.7' cy='233.8' r='3.5' fill='#1f9d55'/>
+<circle cx='203.4' cy='209.8' r='3.5' fill='#1f9d55'/>
+<circle cx='265.1' cy='186.0' r='3.5' fill='#1f9d55'/>
+<circle cx='326.8' cy='162.4' r='3.5' fill='#1f9d55'/>
+<circle cx='388.6' cy='139.1' r='3.5' fill='#1f9d55'/>
+<circle cx='450.3' cy='115.8' r='3.5' fill='#1f9d55'/>
+<line x1='502' y1='74' x2='526' y2='74' stroke='#1f9d55' stroke-width='2'/>
+<text x='532' y='78'>mergeSort</text>
+<polyline points='80.0,254.1 141.7,230.1 203.4,206.4 265.1,182.9 326.8,159.6 388.6,136.4 450.3,113.3' fill='none' stroke='#888888' stroke-width='2' stroke-dasharray='6 4'/>
+<line x1='502' y1='94' x2='526' y2='94' stroke='#888888' stroke-width='2' stroke-dasharray='6 4'/>
+<text x='532' y='98'>n log₂ n</text>
+</svg>
