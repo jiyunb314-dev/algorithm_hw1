@@ -1,6 +1,6 @@
 /* 정렬 비교 실험 — 병합 · 퀵 · 보고 정렬.
  *
- *   make run                  아래 main의 실험 전체 (Java 코드의 main과 같은 흐름)
+ *   make run                  아래 main의 실험 전체 (배열 크기 × 입력 종류)
  *   ./src/main.out --demo     작은 배열 하나 (Python의 main.py와 같은 출력)
  *
  * 배열 크기 × 입력 종류마다 같은 입력을 복사해 세 정렬에 넘기고, 걸린 시간과

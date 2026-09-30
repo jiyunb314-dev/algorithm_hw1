@@ -1,7 +1,7 @@
 # 빌드와 테스트를 한 단어로 돌리기 위한 Makefile.
 # 컨테이너 안에서 실행한다 (docker compose exec lab bash).
 #
-#   make run      정렬 비교 실험 전체 (Java 코드의 main과 같은 흐름, 10초 남짓)
+#   make run      정렬 비교 실험 전체 (배열 크기 × 입력 종류, 10초 남짓)
 #   make results  실험 출력을 report/results.txt에 남긴다
 #   make demo     작은 배열 하나로 세 정렬 실행 (C, Python — 같은 출력)
 #   make test     유닛 테스트 (C, Python) + 두 구현의 출력이 같은지 확인

@@ -1,4 +1,4 @@
-/* 실험 입력 만들기 — Java 코드의 generateXxx 함수들과 같다.
+/* 실험 입력 만들기 — 입력 종류 여섯 가지.
  * 돌려받은 배열은 부른 쪽이 free한다. */
 #ifndef DATA_H
 #define DATA_H

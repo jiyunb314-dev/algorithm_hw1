@@ -116,7 +116,7 @@ int partitionRandom(int arr[], int low, int high, Random *rand) {
 
 /* 교과서형 퀵 정렬과 다르다: 양쪽을 모두 재귀하지 않고 **작은 쪽만** 재귀하고
  * 큰 쪽은 반복문으로 처리한다. 분할이 아무리 치우쳐도 재귀 깊이가 log n을 넘지
- * 않아 스택 오버플로를 막는다 (Java 코드의 주석과 같은 이유). */
+ * 않아 스택 오버플로를 막는다. */
 void quickSort(int arr[], int low, int high, Random *rand) {
     if (low >= high) return;
     enterCall();
