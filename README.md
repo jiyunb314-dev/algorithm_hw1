@@ -3,7 +3,7 @@
 2026-2 **고급알고리즘**(SIT2001-01) 과제 1 · 배지윤 (2026193117)
 
 수업에서 배운 **병합 정렬 · 퀵 정렬**과 배우지 않은 **보고 정렬**(bogosort)을 C로 구현해
-배열 크기 × 입력 종류별로 비교한다. 코드 흐름은 참고한 Java 코드(`Algorithms.java`)를 따른다.
+배열 크기 × 입력 종류별로 비교한다.
 
 - **보고서: [report/REPORT.md](report/REPORT.md)**
 - 실습 환경: [lec-algorithm/algorithm-env](https://github.com/lec-algorithm/algorithm-env) template에서 시작
@@ -45,8 +45,8 @@ VS Code를 쓴다면 Dev Containers 확장의 **Reopen in Container**를 골라�
 $ make run
 === Array size: 100000 ===
 Input: Random
-Merge Sort:      13.285 ms, 0.38 MB used,      1536246 compares, depth  17
-Quick Sort:       8.491 ms, 0.00 MB used,      1941216 compares, depth  10
+Merge Sort:      13.218 ms, 0.38 MB used,      1536246 compares, depth  17
+Quick Sort:       8.466 ms, 0.00 MB used,      1941216 compares, depth  10
 Bogo Sort:   (skipped, too slow)
 ...
 ```
@@ -121,7 +121,7 @@ algorithm_hw1/
 ├── src/
 │   ├── sort.h · sort.c               # merge · mergeSort · partitionRandom · quickSort · bogoSort
 │   ├── data.h · data.c               # generateRandom 등 입력 생성 6가지
-│   ├── main.c                        # 실험 (Java main과 같은 흐름) / --demo
+│   ├── main.c                        # 실험 (배열 크기 × 입력 종류) / --demo
 │   └── sort.py · main.py             # 같은 세 정렬의 Python 구현
 ├── tests/
 │   ├── test_sort.c                   # C 유닛 테스트 (표준 C만 사용)
