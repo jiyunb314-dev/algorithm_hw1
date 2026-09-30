@@ -36,6 +36,7 @@ VS Code를 쓴다면 Dev Containers 확장의 **Reopen in Container**를 골라�
 | --- | --- |
 | `make run` | 정렬 비교 실험 전체 (배열 크기 6가지 × 입력 6가지, 10초 남짓) |
 | `make results` | 실험 출력을 `report/results.txt`에 남긴다 |
+| `make charts` | `results.txt`로 보고서 그래프(`report/fig*.svg`)를 다시 그린다 |
 | `make demo` | 작은 배열 하나로 세 정렬 실행 (C · Python, 같은 출력) |
 | `make test` | 유닛 테스트 (C · Python) + 두 구현의 출력 대조 |
 | `make debug` | 디버그 심볼을 넣어 빌드 |
@@ -126,7 +127,8 @@ algorithm_hw1/
 ├── tests/
 │   ├── test_sort.c                   # C 유닛 테스트 (표준 C만 사용)
 │   └── test_sort.py                  # Python 유닛 테스트 (unittest)
-├── report/                           # 보고서 · 실험 출력(results.txt)
+├── tools/plot.py                     # results.txt → 그래프 SVG (표준 모듈만 사용)
+├── report/                           # 보고서 · 그래프 · 실험 출력(results.txt)
 ├── .devcontainer/ · compose.yml · Dockerfile   # 실습 컨테이너
 └── .vscode/                          # 빌드·디버그 설정 (F5, Cmd+Shift+B)
 ```
